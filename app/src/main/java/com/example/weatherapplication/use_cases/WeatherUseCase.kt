@@ -12,12 +12,8 @@ import javax.inject.Inject
 
 class WeatherUseCase @Inject constructor(private val apiService: ApiService) {
 
-
-
     operator fun invoke(city: String): Flow<Resource<WeatherModel>> = flow {
-
         try {
-
             emit(Resource.Loading())
             val forecast = apiService.getForecast(Constants.API_KEY , city , 7)
             emit(Resource.Success(forecast))
@@ -28,6 +24,5 @@ class WeatherUseCase @Inject constructor(private val apiService: ApiService) {
             emit(Resource.Error(e.localizedMessage ?: "check your internet connection", null))
         }
     }
-
 
 }

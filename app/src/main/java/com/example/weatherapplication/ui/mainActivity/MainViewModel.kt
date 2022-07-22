@@ -1,6 +1,5 @@
 package com.example.weatherapplication.ui.mainActivity
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,30 +15,25 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(private val weatherUseCase: WeatherUseCase):ViewModel(){
 
 
-
     val getWeatherLiveData: MutableLiveData<Resource<WeatherModel>> = MutableLiveData<Resource<WeatherModel>>()
 
-
-
     fun getForecast(city : String) {
+        getWeatherLiveData.value = Resource.Loading()
         weatherUseCase(city).onEach { result ->
-
-            Log.i("TAG", "getCoins: ")
-
-            if (result.status == Resource.Status.LOADING) {
-                getWeatherLiveData.value = Resource.Loading()
-            } else if (result.status == Resource.Status.SUCCESS) {
-                getWeatherLiveData.value = Resource.Success(result.data)
-            } else if (result.status == Resource.Status.ERROR) {
-                getWeatherLiveData.value = Resource.Error( result.message+"  error occured!!!")
+            when (result.status) {
+                Resource.Status.LOADING -> {
+                    getWeatherLiveData.value = Resource.Loading()
+                }
+                Resource.Status.SUCCESS -> {
+                    getWeatherLiveData.value = Resource.Success(result.data)
+                }
+                Resource.Status.ERROR -> {
+                    getWeatherLiveData.value = Resource.Error( result.message+"  error occured!!!")
+                }
             }
 
         }.launchIn(viewModelScope)
     }
-
-
-
-
 
     public override fun onCleared() {
         getWeatherLiveData.value = null
