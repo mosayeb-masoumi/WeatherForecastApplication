@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:paddingStart="10dp"
     android:paddingEnd="10dp"
-    tools:context=".ui.mainActivity.MainActivity">
+
+    >
+<!--    tools:context=".ui.mainActivity.MainActivity">-->
 
 
     <RelativeLayout
@@ -47,8 +49,8 @@
         android:layout_height="150dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/edt_shape"
-        android:id="@+id/rl_today_forecast"
         android:visibility="gone"
+        android:id="@+id/rl_today_forecast"
         android:layout_below="@+id/rl_search">
 
         <TextView
@@ -56,8 +58,10 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:textSize="17sp"
-            android:text="Current Forecast" />
+            android:layout_marginBottom="10dp"
+            android:text="country"
+            android:id="@+id/txt_country"
+            android:textSize="17sp" />
 
         <ImageView
             android:id="@+id/img_current"
@@ -113,13 +117,14 @@
 
     </RelativeLayout>
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rl_today_forecast"
-        android:layout_marginTop="10dp" />
-
+        android:layout_marginTop="23dp"
+        tools:listitem="@layout/row" />
 
     <TextView
         android:layout_width="wrap_content"

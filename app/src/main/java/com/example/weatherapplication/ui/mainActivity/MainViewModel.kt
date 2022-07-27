@@ -1,42 +1,44 @@
 package com.example.weatherapplication.ui.mainActivity
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapplication.helper.Resource
-import com.example.weatherapplication.models.WeatherModel
-import com.example.weatherapplication.use_cases.WeatherUseCase
+import com.example.weatherapplication.repository.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val weatherUseCase: WeatherUseCase):ViewModel(){
+class MainViewModel @Inject constructor(private val weatherRepository: WeatherRepository):ViewModel(){
 
 
-    val getWeatherLiveData: MutableLiveData<Resource<WeatherModel>> = MutableLiveData<Resource<WeatherModel>>()
+    private val _response = MutableLiveData<MyWeatherState>()
+    val weatherLivedata: LiveData<MyWeatherState> get() = _response
+
+
+
 
     fun getForecast(city : String) {
-        getWeatherLiveData.value = Resource.Loading()
-        weatherUseCase(city).onEach { result ->
-            when (result.status) {
-                Resource.Status.LOADING -> {
-                    getWeatherLiveData.value = Resource.Loading()
+
+        weatherRepository(city).onEach { result ->
+            when (result) {
+
+                is Resource.Loading -> {
+                    _response.value = MyWeatherState(isLoading = true)
                 }
-                Resource.Status.SUCCESS -> {
-                    getWeatherLiveData.value = Resource.Success(result.data)
+                is Resource.Success -> {
+                    _response.value = MyWeatherState(data = result.data)
                 }
-                Resource.Status.ERROR -> {
-                    getWeatherLiveData.value = Resource.Error( result.message+"  error occured!!!")
+                is Resource.Error -> {
+                    _response.value = MyWeatherState(error = "An unexpected error occured" )
                 }
+
             }
 
         }.launchIn(viewModelScope)
-    }
-
-    public override fun onCleared() {
-        getWeatherLiveData.value = null
     }
 
 }
