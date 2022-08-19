@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.weatherapplication.R
@@ -72,14 +73,11 @@ class MainActivity : AppCompatActivity(), ForecastItemInteraction {
                     it.isLoading -> {
                         binding.progressbar.visibility = View.VISIBLE
                         binding.txtError.visibility = View.GONE
-//                        binding.rlTodayForecast.visibility = View.GONE
                     }
 
                     it.error != "" -> {
 
                         binding.progressbar.visibility = View.GONE
-//                        binding.rlTodayForecast.visibility = View.GONE
-
                         binding.txtError.visibility = View.VISIBLE
 
                         if (it.error.contains("400")) {
@@ -105,6 +103,7 @@ class MainActivity : AppCompatActivity(), ForecastItemInteraction {
             }
 
         }
+        
 
     }
 
